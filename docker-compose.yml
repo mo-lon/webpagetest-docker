@@ -1,0 +1,20 @@
+version: '3'
+services:
+  server:
+    build: ./docker/server
+    container_name: 'webpagetest_server'
+    volumes:
+      - ./volumes/wpt_data/dat:/var/www/html/dat
+      - ./volumes/wpt_data/results:/var/www/html/results
+      - ./volumes/wpt_data/logs:/var/www/html/logs
+    ports:
+     - '4000:80'
+  agent:
+    build: ./docker/agent
+    container_name: 'webpagetest_agent'
+    ports:
+      - '4001:80'
+    network_mode: "host"
+    environment:
+      - SERVER_URL=http://localhost:4000/work/
+      - LOCATION=Test
